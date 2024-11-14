@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grocery Shopping List</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Grocery Shopping List</h1>
+        <div class="input-group">
+            <input type="text" id="itemInput" placeholder="Add an item">
+            <button onclick="addItem()">Add</button>
+        </div>
+        <ul id="itemList"></ul>
+    </div>
+
+    <script>
+        let items = [];
+
+        function addItem() {
+            const itemText = document.getElementById("itemInput").value;
+            if (itemText) {
+                const item = { text: itemText, checked: false };
+                items.push(item);
+                document.getElementById("itemInput").value = '';
+                renderItems();
+            }
+        }
+
+        function toggleItem(index) {
+            items[index].checked = !items[index].checked;
+            renderItems();
+        }
+
+        function editItem(index) {
+            const newText = prompt("Edit item:", items[index].text);
+            if (newText) {
+                items[index].text = newText;
+                renderItems();
+            }
+        }
+
+        function deleteItem(index) {
+            items.splice(index, 1);
+            renderItems();
+        }
+
+        function renderItems() {
+            const itemList = document.getElementById("itemList");
+            itemList.innerHTML = '';
+            items.forEach((item, index) => {
+                const listItem = document.createElement("li");
+                listItem.innerHTML = `
+                    <input type="checkbox" ${item.checked ? 'checked' : ''} onclick="toggleItem(${index})">
+                    <span class="${item.checked ? 'checked' : ''}">${item.text}</span>
+                    <button onclick="editItem(${index})">Edit</button>
+                    <button onclick="deleteItem(${index})">Delete</button>
+                `;
+                itemList.appendChild(listItem);
+            });
+        }
+    </script>
+</body>
+</html>
